@@ -1,0 +1,14 @@
+/.idea
+/.gradle
+/*.iml
+/*.ipr
+/*.iws
+build
+test.groovy
+/classes
+/gradle/gradle.iml
+/logs
+/bin/
+/.classpath
+/.project
+/.settings

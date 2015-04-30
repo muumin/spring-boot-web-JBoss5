@@ -1,0 +1,59 @@
+apply plugin: "idea"
+apply plugin: "eclipse"
+apply plugin: "eclipse-wtp"
+apply plugin: "groovy"
+apply plugin: "war"
+
+defaultTasks "clean", "war"
+
+war {
+    baseName = 'myapp'
+//    version =  '0.0.1'
+}
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+project.ext {
+    artifactId = 'myapp'
+    springBootVersion = '1.2.3.RELEASE'
+}
+
+def defaultEncoding = 'UTF-8'
+tasks.withType(AbstractCompile) each { it.options.encoding = defaultEncoding }
+tasks.withType(GroovyCompile) each { it.groovyOptions.encoding = defaultEncoding }
+
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile ("org.springframework.boot:spring-boot-starter-web:$springBootVersion"){
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile "org.springframework.boot:spring-boot-starter-batch:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-legacy:1.0.1.RELEASE"
+
+    compile "org.projectlombok:lombok:1.16.4"
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '2.3' }
+
+eclipse {
+    pathVariables GRADLE_REPO: file(System.properties['user.home'] + '/.gradle/cache')
+    project {
+        name='myapp'
+    }
+    wtp {
+        component {
+            contextPath = '/myapp'
+        }
+
+        facet {
+            facet name: 'java', version: '1.6'
+            facet name: 'jst.web', version: '2.5'
+        }
+    }
+}
+
